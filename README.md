@@ -165,3 +165,91 @@ The workflow consists of two main jobs:
 - Deploys to GitHub Pages using [JamesIves/github-pages-deploy-action](https://github.com/JamesIves/github-pages-deploy-action)
 
 To view the status of workflow runs, go to the "Actions" tab in the GitHub repository.
+
+### Setup and Configuration Guide
+
+This section provides detailed instructions on how to set up and customize the CI/CD pipeline and GitHub Pages deployment.
+
+#### Enabling GitHub Pages
+
+To enable GitHub Pages for your repository:
+
+1. Go to your repository on GitHub
+2. Navigate to **Settings** > **Pages** (under Code and automation)
+3. In the **Build and deployment** section:
+   - Set **Source** to "GitHub Actions"
+4. Save the changes
+
+#### GitHub CLI Commands for CI/CD Management
+
+If you have [GitHub CLI](https://cli.github.com/) installed, you can use these commands to manage and monitor your workflows:
+
+```sh
+# List recent workflow runs
+gh run list -L 5
+
+# View details of a specific workflow run
+gh run view <run-id>
+
+# Watch a workflow run in real-time
+gh run watch <run-id>
+
+# View logs of a failed workflow
+gh run view <run-id> --log-failed
+
+# Rerun a failed workflow
+gh run rerun <run-id>
+```
+
+#### Customizing the Workflow
+
+The workflow is defined in `.github/workflows/deploy.yml`. Here are some common customizations:
+
+1. **Changing the Node.js version**:
+   ```yaml
+   - name: Setup Node.js
+     uses: actions/setup-node@v4
+     with:
+       node-version: '20' # Change to your preferred version
+   ```
+
+2. **Modifying build commands**:
+   ```yaml
+   - name: Build project
+     run: npm run build # Change to your build command
+   ```
+
+3. **Changing the deployment branch**:
+   ```yaml
+   - name: Deploy to GitHub Pages
+     uses: JamesIves/github-pages-deploy-action@v4
+     with:
+       folder: dist
+       branch: gh-pages # Change to your preferred branch
+   ```
+
+#### Troubleshooting Common Issues
+
+1. **Deployment Failure**:
+   - Check if GitHub Pages is enabled in repository settings
+   - Ensure the workflow has proper permissions (contents: write)
+   - Verify that the build is generating files in the correct folder
+
+2. **Build Failure**:
+   - Check for syntax errors in your code
+   - Ensure all dependencies are properly installed
+   - Verify that your build scripts are correct
+
+3. **Base URL Issues**:
+   - If your site has 404 errors or missing assets, check that the base URL in `vite.config.ts` matches your repository name
+
+#### Viewing Deployment Status
+
+To check if your site has been deployed:
+
+1. Go to the **Actions** tab in your repository
+2. Click on the latest workflow run
+3. If successful, you should see all checkmarks
+4. Your site will be available at: `https://<username>.github.io/<repository-name>/`
+
+You can also see deployment history and details in the **Environments** section of your repository.
