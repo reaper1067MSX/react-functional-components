@@ -1,13 +1,71 @@
-# React + TypeScript + Vite
+# React Functional Components
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React application built with TypeScript and Vite, featuring CI/CD pipeline with GitHub Actions and automatic deployment to GitHub Pages.
 
-Currently, two official plugins are available:
+## Table of Contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Features](#features)
+- [Installation](#installation)
+- [Development](#development)
+  - [Available Scripts](#available-scripts)
+  - [ESLint Configuration](#eslint-configuration)
+- [Deployment](#deployment)
+  - [GitHub Pages Configuration](#github-pages-configuration)
+- [CI/CD Pipeline](#cicd-pipeline)
+  - [Workflow Configuration](#workflow-configuration)
+  - [Pipeline Steps](#pipeline-steps)
 
-## Expanding the ESLint configuration
+## Features
+
+- React 19 with TypeScript support
+- Vite build tool for fast development and optimized production builds
+- GitHub Actions CI/CD pipeline
+- Automated deployment to GitHub Pages
+- ESLint configuration for code quality
+- Source maps for better debugging experience
+
+## Installation
+
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/reaper1067MSX/react-functional-components.git
+   cd react-functional-components
+   ```
+
+2. Install dependencies:
+   ```sh
+   npm install
+   ```
+
+## Development
+
+### Available Scripts
+
+- **Development server**:
+  ```sh
+  npm run dev
+  ```
+  Runs the TypeScript compiler and starts the Vite development server with HMR.
+
+- **Linting**:
+  ```sh
+  npm run lint
+  ```
+  Runs ESLint to check for code quality issues.
+
+- **Production build**:
+  ```sh
+  npm run build
+  ```
+  Compiles TypeScript and builds the project for production.
+
+- **Preview production build**:
+  ```sh
+  npm run preview
+  ```
+  Previews the production build locally.
+
+### ESLint Configuration
 
 If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
@@ -52,3 +110,58 @@ export default tseslint.config({
   },
 })
 ```
+
+## Deployment
+
+### GitHub Pages Configuration
+
+The project is configured for automatic deployment to GitHub Pages. The configuration in `vite.config.ts` includes:
+
+```typescript
+// Base URL configuration for GitHub Pages deployment
+base: '/react-functional-components/',
+
+// Build configuration
+build: {
+  // Generate source maps for better debugging experience
+  sourcemap: true,
+  
+  // Output directory (default is 'dist')
+  outDir: 'dist',
+  
+  // Clean the output directory before build
+  emptyOutDir: true,
+}
+```
+
+After deployment, the application is available at:
+https://reaper1067msx.github.io/react-functional-components/
+
+## CI/CD Pipeline
+
+The project uses GitHub Actions for continuous integration and deployment.
+
+### Workflow Configuration
+
+The CI/CD pipeline is defined in `.github/workflows/deploy.yml` and is triggered on:
+- Push to the `main` branch
+- Pull requests to the `main` branch
+
+### Pipeline Steps
+
+The workflow consists of two main jobs:
+
+**1. Build and Test**:
+- Checks out the code
+- Sets up Node.js environment
+- Installs dependencies
+- Lints the code
+- Builds the project
+- Uploads build artifacts
+
+**2. Deploy to GitHub Pages**:
+- Only runs on push events to the `main` branch
+- Downloads the build artifacts
+- Deploys to GitHub Pages using [JamesIves/github-pages-deploy-action](https://github.com/JamesIves/github-pages-deploy-action)
+
+To view the status of workflow runs, go to the "Actions" tab in the GitHub repository.
