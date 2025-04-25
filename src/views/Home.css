@@ -1,0 +1,17 @@
+#task-form {
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  color: black;
+  font-weight: 500;
+}
+
+#task-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.container {
+  color: grey;
+}
