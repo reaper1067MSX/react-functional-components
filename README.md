@@ -146,6 +146,7 @@ The project uses GitHub Actions for continuous integration and deployment.
 The CI/CD pipeline is defined in `.github/workflows/deploy.yml` and is triggered on:
 - Push to the `main` branch
 - Pull requests to the `main` branch
+- Manual trigger via the GitHub Actions interface or GitHub CLI
 
 ### Pipeline Steps
 
@@ -199,7 +200,31 @@ gh run view <run-id> --log-failed
 
 # Rerun a failed workflow
 gh run rerun <run-id>
+
+# Manually trigger the deployment workflow
+gh workflow run "Build and Deploy" --ref main
 ```
+
+#### Manually Triggering Deployments
+
+You can manually trigger the deployment process in several ways:
+
+1. **Using GitHub CLI**:
+   ```sh
+   gh workflow run "Build and Deploy" --ref main
+   ```
+
+2. **Using GitHub Web Interface**:
+   - Go to your repository on GitHub
+   - Navigate to the **Actions** tab
+   - Select the **Build and Deploy** workflow from the left sidebar
+   - Click the **Run workflow** button
+   - Select the **main** branch and click **Run workflow**
+
+Manual deployments are useful when:
+- You need to redeploy without code changes
+- You're troubleshooting deployment issues
+- The automatic deployment failed for some reason
 
 #### Customizing the Workflow
 
@@ -243,6 +268,13 @@ The workflow is defined in `.github/workflows/deploy.yml`. Here are some common 
 3. **Base URL Issues**:
    - If your site has 404 errors or missing assets, check that the base URL in `vite.config.ts` matches your repository name
 
+4. **Blank Page After Deployment**:
+   - Check the browser console for errors (F12 in most browsers)
+   - Verify that the `gh-pages` branch contains the expected files with `git checkout gh-pages`
+   - Clear your browser cache or try in incognito/private mode
+   - Check that the assets paths in the HTML file include the correct base URL
+   - Try a manual deployment to refresh all files
+
 #### Viewing Deployment Status
 
 To check if your site has been deployed:
@@ -253,3 +285,20 @@ To check if your site has been deployed:
 4. Your site will be available at: `https://<username>.github.io/<repository-name>/`
 
 You can also see deployment history and details in the **Environments** section of your repository.
+
+#### Forcing a Clean Deployment
+
+If you're experiencing issues with your deployed site, you can force a clean deployment:
+
+1. **Delete and recreate the gh-pages branch**:
+   ```sh
+   # Delete the gh-pages branch locally and remotely
+   git branch -D gh-pages # Local deletion (if exists)
+   git push origin --delete gh-pages # Remote deletion
+
+   # Then trigger a manual deployment
+   gh workflow run "Build and Deploy" --ref main
+   ```
+
+2. **Use the single-commit option**:
+   The workflow is configured with `single-commit: true` which ensures the deployment branch contains only a single commit with the latest files, reducing potential conflicts.
