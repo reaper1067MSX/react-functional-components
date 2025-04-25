@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import ITarea from "../Interfaces/ITarea";
 import Tarea from "./Tarea";
 import "./ListaTarea.css";
+import TaskStatus from "../Enums/TaskStatus";
 
 const ListarTareas: FC = () => {
   const [filtro, setFiltro] = useState<string>("");
@@ -13,35 +14,35 @@ const ListarTareas: FC = () => {
       id: 0,
       nombre: "Nueva Tarea",
       descripcion: "Descripcion",
-      estado: "ejecucion",
+      estado: TaskStatus.InProgress,
       fecha: new Date("2023-10-01"),
     },
     {
       id: 1,
       nombre: "Aprender react + Typescript",
       descripcion: "Realizar la formacion alura",
-      estado: "ejecucion",
+      estado: TaskStatus.InProgress,
       fecha: new Date("2023-10-01"),
     },
     {
       id: 2,
       nombre: "Memorizar react + Typescript",
       descripcion: "Realizar la formacion alura",
-      estado: "Pausada",
+      estado: TaskStatus.Pending,
       fecha: new Date("2023-10-01"),
     },
     {
       id: 3,
       nombre: "Clash Course react + Typescript",
       descripcion: "Realizar la formacion alura",
-      estado: "Finalizada",
+      estado: TaskStatus.Completed,
       fecha: new Date("2023-10-01"),
     },
     {
       id: 4,
       nombre: "Walkthrout react + Typescript",
       descripcion: "Realizar la formacion alura",
-      estado: "Finalizada",
+      estado: TaskStatus.Completed,
       fecha: new Date("2023-10-01"),
     },
   ]);
@@ -50,13 +51,13 @@ const ListarTareas: FC = () => {
     (tarea: ITarea) =>
       (tarea.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
         filtro === "") &&
-      (!finalizadas || tarea.estado === "Finalizada")
+      (!finalizadas || tarea.estado === TaskStatus.Completed)
   );
 
   const onFinalizar = (id: number) => {
     setTareas((prev) =>
       prev.map((tarea) =>
-        tarea.id === id ? { ...tarea, estado: "Finalizado" } : tarea
+        tarea.id === id ? { ...tarea, estado: TaskStatus.Completed } : tarea
       )
     );
   };

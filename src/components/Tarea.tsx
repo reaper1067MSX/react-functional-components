@@ -1,5 +1,7 @@
 import React from "react";
 import ITareaProps from "../Interfaces/ITareaProps";
+import TaskStatus from "../Enums/TaskStatus";
+import { getTaskStatusLabel } from "../utils/taskStatusUtils";
 import "./ListaTarea.css";
 
 const Tarea: React.FC<ITareaProps> = ({
@@ -13,7 +15,7 @@ const Tarea: React.FC<ITareaProps> = ({
       <div className="task-header">
         <h3 className="task-header">{tarea.nombre}</h3>
         <div className="task-status">
-          <p>{tarea.estado}</p>
+          <p>{getTaskStatusLabel(tarea.estado)}</p>
         </div>
       </div>
       <p>
@@ -24,7 +26,7 @@ const Tarea: React.FC<ITareaProps> = ({
         {tarea.fecha.toUTCString()}
       </p>
       <div className="acciones">
-        {tarea.estado !== "Finalizado" && (
+        {tarea.estado !== TaskStatus.Completed.toString() && (
           <button className="finalizar" onClick={() => onFinalizar(tarea.id)}>
             Finalizar
           </button>
