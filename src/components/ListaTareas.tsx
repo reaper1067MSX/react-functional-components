@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, ChangeEvent, MouseEvent } from "react";
 import ITarea from "../Interfaces/ITarea";
 import Tarea from "./Tarea";
 import "./ListaTarea.css";
@@ -8,7 +8,7 @@ const ListarTareas: FC = () => {
   const [filtro, setFiltro] = useState<string>("");
   const [finalizadas, setFinalizadas] = useState<boolean>(false);
 
-  //const [tarea] = useState<ITarea>();
+  const [tarea] = useState<ITarea>();
   const [tareas, setTareas] = useState<ITarea[]>([
     {
       id: 0,
@@ -66,13 +66,24 @@ const ListarTareas: FC = () => {
     setTareas((prev) => prev.filter((tarea) => tarea.id !== id));
   };
 
+  const agregarTarea = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    if (tarea) {
+      setTareas([...tareas, tarea]);
+    } else {
+      console.error("Cannot add an undefined task.");
+    }
+  };
+
   return (
     <>
       <div>
         <input
           type="text"
           value={filtro}
-          onChange={(e) => setFiltro(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setFiltro(e.target.value)
+          }
           placeholder="Type to filter"
         />
         <label>
@@ -95,7 +106,13 @@ const ListarTareas: FC = () => {
             />
           ))}
         </ul>
-        <button>Agregar Tarea</button>
+        <button
+          onClick={(event: React.MouseEvent<HTMLButtonElement>) =>
+            agregarTarea(event)
+          }
+        >
+          Agregar Tarea
+        </button>
       </>
     </>
   );
