@@ -42,10 +42,22 @@ jobs:
     needs: build
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
+    # These permissions are needed for GitHub Pages deployment
     permissions:
       contents: write
+      pages: write
+      id-token: write
+
+    # Environment for GitHub Pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
+      # Need to checkout the repository first
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Download built assets
         uses: actions/download-artifact@v4
         with:
@@ -62,9 +74,21 @@ jobs:
             exit 1
           fi
 
+      # Setup Pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      # Use the built-in GitHub Pages deployment
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist
           clean: true
+          branch: gh-pages
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Deploy to GitHub Pages [skip ci]"
+          git-config-name: ${{ github.repository_owner }}
+          git-config-email: ${{ github.repository_owner }}@users.noreply.github.com
+          force: true
 
