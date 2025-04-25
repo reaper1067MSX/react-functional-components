@@ -17,7 +17,7 @@ A modern React application built with TypeScript and Vite, featuring CI/CD pipel
 
 ## Features
 
-- React 19 with TypeScript support
+- React 18 with TypeScript support
 - Vite build tool for fast development and optimized production builds
 - GitHub Actions CI/CD pipeline
 - Automated deployment to GitHub Pages
@@ -32,10 +32,23 @@ A modern React application built with TypeScript and Vite, featuring CI/CD pipel
    cd react-functional-components
    ```
 
-2. Install dependencies:
+2. Make sure you have Node.js 18.0.0 or higher installed:
+   ```sh
+   node --version
+   ```
+
+3. Install dependencies:
    ```sh
    npm install
    ```
+
+### Package Manager Lock Files
+
+This project uses npm as the package manager. The lock file (`package-lock.json`) ensures consistent installations across environments. 
+
+- Do not delete the lock file
+- If using another package manager (yarn, pnpm), convert the lock file appropriately
+- Commit lock file changes to version control
 
 ## Development
 
@@ -67,48 +80,60 @@ A modern React application built with TypeScript and Vite, featuring CI/CD pipel
 
 ### ESLint Configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+This project uses ESLint for code quality and consistent style. The current configuration supports both JavaScript and TypeScript with React-specific rules.
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+#### Current Configuration
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The ESLint configuration includes:
 
 ```js
 // eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+import { defineConfig } from 'eslint-define-config';
+import tseslint from 'typescript-eslint';
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
+export default defineConfig({
+  extends: [
+    ...tseslint.configs.recommendedTypeChecked,
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
+  ],
+  plugins: ['react-refresh'],
+  languageOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    parserOptions: {
+      project: ['./tsconfig.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+  settings: {
+    react: {
+      version: 'detect'
+    }
   },
   rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    'react/react-in-jsx-scope': 'off',
+    'react/prop-types': 'off',
+  }
+});
+```
+
+#### Recommended Plugins
+
+For enhanced linting, consider adding these plugins:
+
+```sh
+npm install --save-dev eslint-plugin-react-hooks eslint-plugin-jsx-a11y eslint-plugin-react-refresh
+```
+
+You can also enhance the configuration with accessibility rules:
+
+```js
+// Add to the extends array
+'plugin:jsx-a11y/recommended',
 ```
 
 ## Deployment
