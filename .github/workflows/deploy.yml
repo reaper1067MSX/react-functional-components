@@ -5,6 +5,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch: # Allow manual triggering of the workflow
 
 jobs:
   build:
@@ -40,7 +41,7 @@ jobs:
   deploy:
     name: Deploy to GitHub Pages
     needs: build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     # These permissions are needed for GitHub Pages deployment
     permissions:
@@ -68,11 +69,15 @@ jobs:
       - name: Configure for GitHub Pages
         run: |
           echo "Setting base path for GitHub Pages deployment"
-          # Create or update vite.config.js to include base path
+          # Check for the build files
           if [ ! -f "dist/index.html" ]; then
             echo "Build files not found"
             exit 1
           fi
+          
+          # Display contents for debugging
+          echo "Contents of dist directory:"
+          ls -la dist/
 
       # Setup Pages
       - name: Setup Pages
@@ -91,4 +96,5 @@ jobs:
           git-config-name: ${{ github.repository_owner }}
           git-config-email: ${{ github.repository_owner }}@users.noreply.github.com
           force: true
+          single-commit: true # Use a single commit for the deployment branch
 
